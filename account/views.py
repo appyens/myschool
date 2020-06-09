@@ -1,9 +1,13 @@
-from django.shortcuts import render
-from django.http.response import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render, reverse
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
 
 from .forms import UserRegisterForm, UserLoginForm
 from .models import StaffProfile
+
+
+def dashboard(request):
+    return render(request, 'account/dashboard.html')
 
 
 def staff_register(request):
@@ -18,10 +22,10 @@ def staff_register(request):
             new_user.save()
             # create the user profile
             StaffProfile.objects.create(user=new_user)
-            return render(request, 'account/registration_done.html', {'new_user': new_user})
+            return render(request, 'registration/registration_done.html', {'new_user': new_user})
     else:
         user_form = UserRegisterForm()
-    return render(request, 'account/register.html', {'user_form': user_form})
+        return render(request, 'registration/register.html', {'user_form': user_form})
 
 
 def staff_login(request):
@@ -33,15 +37,16 @@ def staff_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponse('Login Successful')
+                    return HttpResponseRedirect(reverse('account:dashboard'))
                 else:
                     return HttpResponse('Disabled account')
             else:
                 return HttpResponse('Invalid Login')
     else:
         form = UserLoginForm()
-    return render(request, 'account/login.html', {'form': form})
+        return render(request, 'registration/login.html', {'form': form})
 
 
 def staff_logout(request):
-    pass
+    logout(request)
+    return render(request, '', {})
