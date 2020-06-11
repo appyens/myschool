@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from school.models import Standard
 
 
 class StaffRole(models.Model):
@@ -31,3 +32,14 @@ class StaffProfile(models.Model):
 
     def __str__(self):
         return str(self.user.username)
+
+
+class Teacher(StaffProfile):
+    standard = models.OneToOneField(to=Standard, on_delete=models.DO_NOTHING, blank=True, null=True)
+    qualification = models.CharField(max_length=10)
+    date_joined = models.DateField(blank=True, null=True)
+
+
+class NonTeacher(StaffProfile):
+    qualification = models.CharField(max_length=10)
+    date_joined = models.DateField(blank=True, null=True)

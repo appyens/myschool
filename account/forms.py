@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+from .models import StaffProfile
 
 USERNAME = r'^[A-Za-z0-9_-]+$'
 
@@ -12,14 +13,7 @@ class UserRegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email')
-
-    def __init__(self, *args, **kwargs):
-        super(UserRegisterForm, self).__init__(*args, **kwargs)
-        for item in self.fields.keys():
-            self.fields[item].widget.attrs.update({
-                'class': 'form-control col-6',
-            })
+        fields = ('username', 'first_name', 'last_name', 'email')
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')
@@ -30,13 +24,28 @@ class UserRegisterForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={
-                'class': 'form-control py-4',
-                'id': 'inputEmailAddress',
-                'placeholder': 'Enter username'
-            }))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={
-                'class': 'form-control py-4',
-                'id': 'inputPassword',
-                'placeholder': 'Enter password'
-            }))
+    username = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control py-4',
+            'id': 'inputEmailAddress',
+            'placeholder': 'Enter username'}),
+        validators=[RegexValidator(USERNAME)]
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control py-4',
+            'id': 'inputPassword',
+            'placeholder': 'Enter password'
+        })
+    )
+
+
+class EditProfileForm(forms.ModelForm):
+    """"
+    Profile edit form
+    """
+    class Meta:
+        model = StaffProfile
+        fields = ('gender', 'uid', 'dob', 'photo', 'address', 'mobile')
