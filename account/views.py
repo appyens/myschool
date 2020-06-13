@@ -1,23 +1,24 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, redirect
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from .forms import UserRegisterForm, UserLoginForm, EditProfileForm
-from .models import StaffProfile, Teacher, NonTeacher
+from .models import Profile
+
 from student.models import StudentModel
 from common.decorators import headmaster_required
 
 
 @login_required
 def dashboard(request):
-    profile = StaffProfile.objects.get(user=request.user)
-    return render(request, 'account/dashboard.html', {'profile': profile})
+    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
 
 
 def staff_register(request):
     if request.method == 'POST':
         user_form = UserRegisterForm(data=request.POST)
+        print(request.POST)
         if user_form.is_valid():
             # create a new user object but avoid saving it yet
             new_user = user_form.save(commit=False)
@@ -26,7 +27,7 @@ def staff_register(request):
             # save the user object
             new_user.save()
             # create the user profile
-            StaffProfile.objects.create(user=new_user)
+            Profile.objects.create(user=new_user)
             return render(request, 'registration/registration_done.html', {'new_user': new_user})
     else:
         user_form = UserRegisterForm()
@@ -58,26 +59,34 @@ def staff_logout(request):
 
 
 @login_required
+def show_profile(request):
+    template = 'account/show_profile.html'
+    profile = Profile.objects.get(user=request.user)
+    return render(request, template_name=template, context={'profile': profile})
+
+
 def edit_profile(request):
-    template = 'account/edit.html'
+    template = 'account/edit_profile.html'
     context = {}
     if request.method == 'POST':
-        form = EditProfileForm(instance=StaffProfile.objects.get(user=request.user), data=request.POST)
+        form = EditProfileForm(request, instance=Profile.objects.get(user=request.user), data=request.POST)
         if form.is_valid():
             form.save()
-            form = EditProfileForm()
-            context['form'] = form
-            return render(request, template_name=template, context=context)
-    else:
-        form = EditProfileForm()
-        context['form'] = form
-        return render(request, template_name=template, context=context)
+            form = EditProfileForm(request)
+            context['edit_form'] = form
+            return redirect('account:show_profile')
+    form = EditProfileForm(request)
+    context['edit_form'] = form
+    return render(request, template_name=template, context=context)
 
 
+@login_required
 @headmaster_required
 def all_staff(request):
-    all_teacher = Teacher.objects.filter(is_active=True)
-    non_teachers = NonTeacher.objects.filter(is_active=True)
+    template = 'account/staff.html'
+    total_staff = Profile.objects.filter(is_active=True).exclude(user=request.user)
+
+    return render(request, template_name=template, context={'staff': total_staff})
 
 
 @headmaster_required

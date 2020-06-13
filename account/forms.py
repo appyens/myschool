@@ -2,14 +2,43 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from .models import StaffProfile
+from .models import Profile
 
 USERNAME = r'^[A-Za-z0-9_-]+$'
 
 
 class UserRegisterForm(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+        'id': 'inputFirstName',
+        'placeholder': 'Enter first name',
+    }))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+        'id': 'inputLastName',
+        'placeholder': 'Enter last name',
+    }))
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control py-4',
+        'id': 'inputUsername',
+        'placeholder': 'Enter username',
+    }))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
+        'class': 'form-control py-4',
+        'id': 'inputEmailAddress',
+        'aria-describedby': 'emailHelp',
+        'placeholder': 'Enter email address',
+    }))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
+        'class': 'form-control py-4',
+        'id': 'inputPassword',
+        'placeholder': 'Password',
+    }))
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(attrs={
+        'class': 'form-control py-4',
+        'id': 'inputConfirmPassword',
+        'placeholder': 'Confirm password',
+    }))
 
     class Meta:
         model = User
@@ -47,5 +76,11 @@ class EditProfileForm(forms.ModelForm):
     Profile edit form
     """
     class Meta:
-        model = StaffProfile
-        fields = ('gender', 'uid', 'dob', 'photo', 'address', 'mobile')
+        model = Profile
+        fields = ('uid',)
+
+    def __init__(self, request, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control col-5'})
+

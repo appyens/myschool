@@ -1,0 +1,52 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Edit profile{% endblock title %}
+
+{% block content %}
+
+<h1>My Staff</h1>
+<h2>{{ breadcrumb }}</h2>
+
+<div class="card mb-4">
+    <div class="card-header"><i class="fas fa-table mr-1"></i>DataTable Example</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for person in staff %}
+                <tr>
+                    <td>{{ person.user.get_full_name }}</td>
+                    <td>{{ person.role }}</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Edit profile{% endblock title %}
+
+{% block content %}
+
+<h1>My Profile</h1>
+<a class="btn btn-primary" href="{% url 'account:edit_profile' %}">Edit</a>
+<hr>
+<p>Name: {{ profile.user.get_full_name }}</p>
+
+{% if edit_form %}
+<div>
+    <form action="{% url 'account:edit_profile' %}" method="POST">
+        {% csrf_token %}
+        {{ edit_form.as_p }}
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+</div>
+
+{% endif %}
+
+{% endblock content %}

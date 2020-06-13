@@ -6,7 +6,11 @@ app_name = 'account'
 
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('edit/', views.edit_profile, name='edit_profile'),
+
+    path('staff/teaching', views.all_staff, name='teachers'),
+    path('profile/', views.show_profile, name='show_profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('staff/', views.all_staff, name='show_staff'),
     # auth views
     path('register/', views.staff_register, name='register'),
     path('login/', views.staff_login, name='login'),
@@ -20,5 +24,6 @@ urlpatterns = [
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('password-reset/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+
 
 ]
