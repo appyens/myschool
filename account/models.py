@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from school.models import Standard, Address, Religion, CastCategory, Language
+from .manager import ProfileManager
 
 
 class Profile(models.Model):
@@ -37,9 +38,12 @@ class Profile(models.Model):
     # school history
     # date_joined
     # training attended
+    is_teacher = models.BooleanField()
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
+
+    objects = ProfileManager()
 
     def __str__(self):
         return str(self.user.username)

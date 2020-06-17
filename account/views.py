@@ -67,17 +67,14 @@ def show_profile(request):
 
 def edit_profile(request):
     template = 'account/edit_profile.html'
-    context = {}
     if request.method == 'POST':
         form = EditProfileForm(request, instance=Profile.objects.get(user=request.user), data=request.POST)
         if form.is_valid():
             form.save()
-            form = EditProfileForm(request)
-            context['edit_form'] = form
             return redirect('account:show_profile')
-    form = EditProfileForm(request)
-    context['edit_form'] = form
-    return render(request, template_name=template, context=context)
+    initial_data = Profile.objects.filter(user=request.user).values()[0]
+    form = EditProfileForm(initial=initial_data)
+    return render(request, template_name=template, context={'form': form})
 
 
 @login_required
@@ -85,10 +82,10 @@ def edit_profile(request):
 def all_staff(request):
     template = 'account/staff.html'
     total_staff = Profile.objects.filter(is_active=True).exclude(user=request.user)
-
     return render(request, template_name=template, context={'staff': total_staff})
 
 
 @headmaster_required
 def all_students(request):
     students = StudentModel.objects.filter(is_active=True)
+

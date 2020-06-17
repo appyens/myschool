@@ -1,0 +1,15 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Add class teacher{% endblock title %}
+
+{% block content %}
+
+<div>
+    <form action="{% url 'school:a' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+</div>
+
+{% endblock content %}

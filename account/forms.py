@@ -75,12 +75,12 @@ class EditProfileForm(forms.ModelForm):
     """"
     Profile edit form
     """
+
     class Meta:
         model = Profile
-        fields = ('uid',)
+        fields = ('gender', 'dob', 'mobile', 'photo', 'address', 'cast', 'religion', 'category', 'mother_tounge', 'uid')
 
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         for field in self.fields.keys():
             self.fields[field].widget.attrs.update({'class': 'form-control col-5'})
-
