@@ -7,10 +7,16 @@ app_name = 'account'
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
 
-    path('staff/teaching', views.all_staff, name='teachers'),
     path('profile/', views.show_profile, name='show_profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
-    path('staff/', views.all_staff, name='show_staff'),
+
+
+    # management
+    path('staff/', views.staff_list, name='show_staff'),
+    path('standard/add', views.add_standard, name='add_standard'),
+    path('standard/teacher/add/', views.add_class_teacher, name='add_classteacher'),
+    path('classes/', views.class_list, name='class_list'),
+
     # auth views
     path('register/', views.staff_register, name='register'),
     path('login/', views.staff_login, name='login'),
@@ -24,6 +30,5 @@ urlpatterns = [
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('password-reset/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-
 
 ]

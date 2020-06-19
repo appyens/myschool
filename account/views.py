@@ -2,11 +2,11 @@ from django.shortcuts import render, reverse, redirect
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from .forms import UserRegisterForm, UserLoginForm, EditProfileForm
-from .models import Profile
+from .forms import UserRegisterForm, UserLoginForm, EditProfileForm, AddStandardForm, AddClassTeacherForm
+from .models import Profile, ClassTeacher
 
-from student.models import StudentModel
 from common.decorators import headmaster_required
 
 
@@ -18,7 +18,6 @@ def dashboard(request):
 def staff_register(request):
     if request.method == 'POST':
         user_form = UserRegisterForm(data=request.POST)
-        print(request.POST)
         if user_form.is_valid():
             # create a new user object but avoid saving it yet
             new_user = user_form.save(commit=False)
@@ -27,7 +26,7 @@ def staff_register(request):
             # save the user object
             new_user.save()
             # create the user profile
-            Profile.objects.create(user=new_user)
+            # Profile.objects.create(user=new_user)
             return render(request, 'registration/registration_done.html', {'new_user': new_user})
     else:
         user_form = UserRegisterForm()
@@ -79,13 +78,42 @@ def edit_profile(request):
 
 @login_required
 @headmaster_required
-def all_staff(request):
-    template = 'account/staff.html'
+def staff_list(request):
+    template = 'manage/staff-list.html'
     total_staff = Profile.objects.filter(is_active=True).exclude(user=request.user)
     return render(request, template_name=template, context={'staff': total_staff})
 
 
 @headmaster_required
-def all_students(request):
-    students = StudentModel.objects.filter(is_active=True)
+def add_standard(request):
+    if request.method == 'POST':
+        form = AddStandardForm(data=request.POST)
+        if form.is_valid():
+            standard = form.save(commit=False)
+            standard.school_id = 1
+            standard.save()
+            messages.success(request, "Class added successfully")
+            return render(request, 'manage/add-standard.html', {})
+        else:
+            form = AddStandardForm()
+            return render(request, 'manage/add-standard.html', {'form': form})
+    form = AddStandardForm()
+    return render(request, 'manage/add-standard.html', {'form': form})
 
+
+@headmaster_required
+def add_class_teacher(request):
+    if request.method == 'POST':
+        form = AddClassTeacherForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Class added successfully")
+            return render(request, 'manage/add-class-teacher.html', {})
+    form = AddClassTeacherForm()
+    return render(request, 'manage/add-class-teacher.html', {'form': form})
+
+
+@headmaster_required
+def class_list(request):
+    items = ClassTeacher.objects.all()
+    return render(request, 'manage/class-list.html', {'items': items})

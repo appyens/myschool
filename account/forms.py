@@ -2,7 +2,10 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from .models import Profile
+
+from .models import Profile, ClassTeacher
+from school.models import Standard
+
 
 USERNAME = r'^[A-Za-z0-9_-]+$'
 
@@ -78,9 +81,33 @@ class EditProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('gender', 'dob', 'mobile', 'photo', 'address', 'cast', 'religion', 'category', 'mother_tounge', 'uid')
+        fields = ('gender', 'dob', 'mobile', 'uid', 'photo', 'address', 'cast', 'religion', 'category', 'language')
 
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         for field in self.fields.keys():
             self.fields[field].widget.attrs.update({'class': 'form-control col-5'})
+
+
+class AddStandardForm(forms.ModelForm):
+
+    class Meta:
+        model = Standard
+        fields = ('standard', 'max_students')
+
+    # def clean(self):
+    #     standard = self.cleaned_data['standard']
+    #     if isinstance(int(standard), int):
+    #         return standard
+    #     raise ValidationError("Please provide valid number")
+
+
+class AddClassTeacherForm(forms.ModelForm):
+
+    class Meta:
+        model = ClassTeacher
+        fields = ('teacher', 'standard')
+        widgets = {
+            'teacher': forms.Select(),
+            'standard': forms.Select(),
+        }

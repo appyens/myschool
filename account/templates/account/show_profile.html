@@ -7,6 +7,22 @@
 <h1>{{ profile.user.get_full_name }}</h1>
 <a class="btn btn-primary" href="{% url 'account:edit_profile' %}">Edit</a>
 <hr>
-<p>Name: {{ profile.user.get_full_name }}</p>
+<div class="row">
+    <div class="col-4">
+        <p>Name: {{ profile.user.get_full_name }}</p>
+        <p>Gender: {{ profile.gender }}</p>
+        <p>Date of birth: {{ profile.dob }}</p>
+        <p>Adhaar: {{ profile.uid }}</p>
+        <p>Cast: {{ profile.cast }}</p>
+        <p>Religion: {{ profile.religion }}</p>
+        <p>Category: {{ profile.category }}</p>
+        <p>Language: {{ profile.language }}</p>
+        <p>Address: {{ profile.address }}</p>
+    </div>
+    <div class="col-4">
+        <img src="{{ profile.photo.url }}" alt="" height="200" width="auto">
+    </div>
+</div>
+
 
 {% endblock content %}

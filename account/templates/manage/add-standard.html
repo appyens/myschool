@@ -1,0 +1,14 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Add class{% endblock title %}
+
+{% block content %}
+<div>
+    <form action="{% url 'account:add_standard' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+{% endblock content %}

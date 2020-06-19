@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
@@ -7,6 +8,9 @@ from .manager import ProfileManager
 
 
 class Profile(models.Model):
+    """
+    User profile model
+    """
     PROFILE_CHOICE = (
         ('personal', 'Personal'),
         ('professional', 'Professional'),
@@ -32,7 +36,7 @@ class Profile(models.Model):
     cast = models.CharField(max_length=512)
     religion = models.ForeignKey(Religion, on_delete=models.DO_NOTHING, blank=True, null=True)
     category = models.ForeignKey(CastCategory, on_delete=models.DO_NOTHING, blank=True, null=True)
-    mother_tounge = models.ForeignKey(Language, on_delete=models.DO_NOTHING, blank=True, null=True)
+    language = models.ForeignKey(Language, on_delete=models.DO_NOTHING, blank=True, null=True)
     # qualification
     # experience
     # school history
@@ -58,3 +62,27 @@ class Profile(models.Model):
 
     def get_age(self):
         pass
+
+
+class ClassTeacher(models.Model):
+    """
+    Teacher is attached with one standard
+    """
+    teacher = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
+    standard = models.ForeignKey(Standard, on_delete=models.DO_NOTHING)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return str(self.teacher.user.get_full_name() + ' - ' + self.standard.standard)
+
+
+# signal
+def add_profile_signal(sender, instance, created, *args, **kwargs):
+    if created:
+        profile = Profile.objects.create(user=instance)
+        profile.save()
+
+
+post_save.connect(add_profile_signal, sender=User)

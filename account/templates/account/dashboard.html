@@ -4,21 +4,5 @@
 
 {% block content %}
 
-{% if edit_form %}
-<div class="center">
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ edit_form.as_p }}
-        <button class="btn btn-primary" type="submit">Save</button>
-    </form>
-</div>
-{% endif %}
-
-
-{% if view == all_staff %}
-    {% for person in teachers %}
-    <h1>{{ person.user.username }}</h1>
-    {% endfor %}
-{% endif %}
 
 {% endblock content %}
