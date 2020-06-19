@@ -7,7 +7,7 @@ app_name = 'account'
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
 
-    path('profile/', views.show_profile, name='show_profile'),
+    path('profile/<str:username>', views.show_profile, name='show_profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
 
 

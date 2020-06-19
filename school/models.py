@@ -50,6 +50,13 @@ class Standard(models.Model):
         standards = Standard.objects.filter(is_active=True).count()
         return standards
 
+    def clean(self):
+        try:
+            if isinstance(int(str(self.standard)), int):
+                return self.standard
+        except ValueError:
+            raise ValidationError("please provide valid number")
+
 
 class Religion(models.Model):
     """

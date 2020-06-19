@@ -3,11 +3,15 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from .forms import UserRegisterForm, UserLoginForm, EditProfileForm, AddStandardForm, AddClassTeacherForm
 from .models import Profile, ClassTeacher
 
 from common.decorators import headmaster_required
+
+
+User = get_user_model()
 
 
 @login_required
@@ -58,16 +62,20 @@ def staff_logout(request):
 
 
 @login_required
-def show_profile(request):
+def show_profile(request, username=None):
     template = 'account/show_profile.html'
-    profile = Profile.objects.get(user=request.user)
-    return render(request, template_name=template, context={'profile': profile})
+    user = User.objects.get(username=username)
+    profile = Profile.objects.get(user=user)
+    can_edit = False
+    if request.user.profile.role == 'headmaster' and username == request.user.username:
+        can_edit = True
+    return render(request, template_name=template, context={'profile': profile, 'can_edit': can_edit})
 
 
 def edit_profile(request):
     template = 'account/edit_profile.html'
     if request.method == 'POST':
-        form = EditProfileForm(request, instance=Profile.objects.get(user=request.user), data=request.POST)
+        form = EditProfileForm(instance=Profile.objects.get(user=request.user), data=request.POST)
         if form.is_valid():
             form.save()
             return redirect('account:show_profile')

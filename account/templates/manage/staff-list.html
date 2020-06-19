@@ -35,7 +35,7 @@
                 <tbody>
                 {% for person in staff %}
                 <tr>
-                    <td>{{ person.user.get_full_name }}</td>
+                    <td><a href="{% url 'account:show_profile' username=person.user.username %}">{{ person.user.get_full_name }}</a></td>
                     <td>{{ person.role }}</td>
                     <td>Edinburgh</td>
                     <td>61</td>

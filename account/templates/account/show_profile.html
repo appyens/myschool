@@ -4,8 +4,10 @@
 
 {% block content %}
 
+{% if can_edit %}
 <h1>{{ profile.user.get_full_name }}</h1>
 <a class="btn btn-primary" href="{% url 'account:edit_profile' %}">Edit</a>
+{% endif %}
 <hr>
 <div class="row">
     <div class="col-4">
@@ -20,7 +22,9 @@
         <p>Address: {{ profile.address }}</p>
     </div>
     <div class="col-4">
+        {% if profile.photo %}
         <img src="{{ profile.photo.url }}" alt="" height="200" width="auto">
+        {% endif %}
     </div>
 </div>
 

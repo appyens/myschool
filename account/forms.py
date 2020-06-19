@@ -95,12 +95,6 @@ class AddStandardForm(forms.ModelForm):
         model = Standard
         fields = ('standard', 'max_students')
 
-    # def clean(self):
-    #     standard = self.cleaned_data['standard']
-    #     if isinstance(int(standard), int):
-    #         return standard
-    #     raise ValidationError("Please provide valid number")
-
 
 class AddClassTeacherForm(forms.ModelForm):
 
