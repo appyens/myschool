@@ -5,18 +5,11 @@ from . import views
 app_name = 'account'
 
 urlpatterns = [
+    # manage
     path('dashboard/', views.dashboard, name='dashboard'),
-
     path('profile/<str:username>', views.show_profile, name='show_profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
-
-
-    # management
     path('staff/', views.staff_list, name='show_staff'),
-    path('standard/add', views.add_standard, name='add_standard'),
-    path('standard/teacher/add/', views.add_class_teacher, name='add_classteacher'),
-    path('classes/', views.class_list, name='class_list'),
-
     # auth views
     path('register/', views.staff_register, name='register'),
     path('login/', views.staff_login, name='login'),

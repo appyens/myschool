@@ -1,0 +1,24 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Add staff{% endblock title %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="row">
+    <form action="{% url 'school:create_staff' %}" method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <a href="{% url 'school:add_class_teacher' %}"><button>Next</button></a>
+</div>
+
+{% endblock content %}

@@ -33,7 +33,7 @@ class Profile(models.Model):
     standard = models.OneToOneField(Standard, on_delete=models.DO_NOTHING, blank=True, null=True)
     uid = models.CharField(max_length=12, blank=True)
     address = models.OneToOneField(Address, on_delete=models.DO_NOTHING, blank=True, null=True)
-    cast = models.CharField(max_length=512)
+    cast = models.CharField(max_length=512, blank=True)
     religion = models.ForeignKey(Religion, on_delete=models.DO_NOTHING, blank=True, null=True)
     category = models.ForeignKey(CastCategory, on_delete=models.DO_NOTHING, blank=True, null=True)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING, blank=True, null=True)
@@ -42,7 +42,7 @@ class Profile(models.Model):
     # school history
     # date_joined
     # training attended
-    is_teacher = models.BooleanField()
+    is_teacher = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
@@ -56,26 +56,8 @@ class Profile(models.Model):
         if self.role == 'non_teacher' and self.standard:
             raise ValidationError("Non teaching staff cannot have standard")
 
-    def is_teacher(self):
-        if (self.role == 'teacher' or 'head_master') and self.standard:
-            return True
-
     def get_age(self):
         pass
-
-
-class ClassTeacher(models.Model):
-    """
-    Teacher is attached with one standard
-    """
-    teacher = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
-    standard = models.ForeignKey(Standard, on_delete=models.DO_NOTHING)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return str(self.teacher.user.get_full_name() + ' - ' + self.standard.standard)
 
 
 # signal

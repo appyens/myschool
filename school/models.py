@@ -15,6 +15,8 @@ class School(models.Model):
     name = models.CharField(max_length=512)
     place = models.CharField(max_length=256)
     academic_year = models.CharField(max_length=32)
+    max_standards = models.PositiveIntegerField()
+    max_staff = models.PositiveIntegerField()
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
@@ -35,7 +37,7 @@ class Scheme(models.Model):
 class Standard(models.Model):
     school = models.ForeignKey(School, on_delete=models.DO_NOTHING)
     standard = models.CharField(max_length=1, unique=True)
-    max_students = models.PositiveIntegerField(blank=True)
+    max_students = models.PositiveIntegerField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
@@ -134,7 +136,7 @@ class Student(models.Model):
     )
 
     standard = models.ForeignKey(to=Standard, on_delete=models.DO_NOTHING)
-    grn = models.IntegerField(primary_key=True)
+    grn = models.IntegerField(unique=True)
     student_id = models.CharField(max_length=19)
     uid = models.CharField(max_length=12, null=True, blank=True)
     first_name = models.CharField(max_length=256)

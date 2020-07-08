@@ -1,0 +1,26 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Setup your school{% endblock title %}
+
+{% block content %}
+
+{% if messages %}
+
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="row">
+    <form action="{% url 'school:setup' %}" method="post">
+        {% csrf_token %}
+        {{ cluster_form.as_p }}
+        {{ school_form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <a href="{% url 'school:create_staff' %}"><button>Next</button></a>
+</div>
+
+{% endblock content %}

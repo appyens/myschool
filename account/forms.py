@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
-from .models import Profile, ClassTeacher
-from school.models import Standard
+from .models import Profile
+from school.models import Standard, Student
 
 
 USERNAME = r'^[A-Za-z0-9_-]+$'
@@ -88,20 +88,3 @@ class EditProfileForm(forms.ModelForm):
         for field in self.fields.keys():
             self.fields[field].widget.attrs.update({'class': 'form-control col-5'})
 
-
-class AddStandardForm(forms.ModelForm):
-
-    class Meta:
-        model = Standard
-        fields = ('standard', 'max_students')
-
-
-class AddClassTeacherForm(forms.ModelForm):
-
-    class Meta:
-        model = ClassTeacher
-        fields = ('teacher', 'standard')
-        widgets = {
-            'teacher': forms.Select(),
-            'standard': forms.Select(),
-        }
