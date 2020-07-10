@@ -90,14 +90,14 @@
                                  data-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
 
-                                    {% if user.profile.role == 'headmaster' %}
+                                    {% if user.profile.role == 'headmaster'%}
                                     <a class="nav-link" href="{% url 'school:setup' %}">Setup</a>
                                     <a class="nav-link" href="{% url 'account:show_staff' %}">Staff</a>
-                                    <a class="nav-link" href="#">Classes</a>
+                                    <a class="nav-link" href="{% url 'school:standard_list' %}">Classes</a>
 
-                                    {% elif  user.profile.role == 'teacher' %}
 
-                                    <a class="nav-link" href="">My Class</a>
+
+                                    <a class="nav-link" href="{% url 'school:my_class' %}">My Class</a>
 
                                     {% endif %}
                                 </nav>

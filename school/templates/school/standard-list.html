@@ -1,0 +1,43 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Standard{% endblock title %}
+
+{% block content %}
+
+<h1>Standards</h1>
+<h2>{{ breadcrumb }}</h2>
+
+<div class="card mb-4">
+    <div class="card-header"><i class="fas fa-table mr-1"></i>DataTable Example</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Teacher</th>
+                    <th>Total students</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Class</th>
+                    <th>Teacher</th>
+                    <th>Total students</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for std in standards %}
+                <tr>
+                    <td><a href="#">{{ std }}</a></td>
+                    <td>{{ std.profile.user.get_full_name }}</td>
+                    <td>{{ std.max_students }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

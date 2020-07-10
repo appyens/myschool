@@ -2,7 +2,7 @@ from django.shortcuts import render, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import ClusterForm, SchoolForm, StandardForm, ClassTeacherForm, StudentForm, CreateStaffForm
-from .models import Standard, School
+from .models import Standard, School, Student
 from common.decorators import headmaster_required
 from account.models import Profile
 
@@ -32,11 +32,11 @@ def setup_school(request):
     return render(request, 'school/setup-school.html', {'cluster_form': cluster_form, 'school_form': school_form})
 
 
+@headmaster_required
 def create_staff(request):
     if request.method == 'POST':
         user_form = CreateStaffForm(request.POST)
         if user_form.is_valid():
-            print(user_form.cleaned_data)
             user = user_form.save(commit=False)
             username = user.username
             password = User.objects.make_random_password()
@@ -75,6 +75,22 @@ def add_class_teacher(request):
             return render(request, 'school/add-class-teacher.html', {'form': form})
     form = ClassTeacherForm()
     return render(request, 'school/add-class-teacher.html', {'form': form})
+
+
+def standard_list(request):
+    standards = Standard.objects.all()
+    return render(request, 'school/standard-list.html', {'standards': standards})
+
+
+def my_class(request):
+    profile = Profile.objects.get(user=request.user)
+    return render(request, 'school/my-class.html', {'profile': profile})
+
+
+def class_detail(request, std_number):
+    std = Standard.objects.get(standard=std_number)
+    students = Student.objects.filter(standard=std)
+    return render(request, 'school/class-detail.html', {'students': students})
 
 
 def add_student(request):

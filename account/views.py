@@ -87,5 +87,5 @@ def edit_profile(request):
 @headmaster_required
 def staff_list(request):
     template = 'account/staff-list.html'
-    total_staff = Profile.objects.filter(is_active=True).exclude(user=request.user)
+    total_staff = Profile.objects.filter(is_active=True)
     return render(request, template_name=template, context={'staff': total_staff})
