@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    {% block title %}Login{% endblock title %}
+    <title>{% block title %}Dashboard base{% endblock title %}</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
           crossorigin="anonymous"/>
@@ -75,48 +75,58 @@
                     </div>
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                        aria-expanded="false" aria-controls="collapsePages">
-                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                        Manage
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>Manage
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
                     <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                          data-parent="#sidenavAccordion">
+
                         <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">School
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
-                                 data-parent="#sidenavAccordionPages">
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
 
                                     {% if user.profile.role == 'headmaster'%}
                                     <a class="nav-link" href="{% url 'school:setup' %}">Setup</a>
-                                    <a class="nav-link" href="{% url 'account:show_staff' %}">Staff</a>
+                                    <a class="nav-link" href="{% url 'school:show_staff' %}">Staff</a>
                                     <a class="nav-link" href="{% url 'school:standard_list' %}">Classes</a>
-
-
-
-                                    <a class="nav-link" href="{% url 'school:my_class' %}">My Class</a>
-
                                     {% endif %}
                                 </nav>
                             </div>
+
+                            {% if request.user.profile.has_standard %}
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                               data-target="#pagesCollapseError" aria-expanded="false"
-                               aria-controls="pagesCollapseError">Error
-                                <div class="sb-sidenav-collapse-arrow">
-                                    <i class="fas fa-angle-down"></i>
-                                </div>
+                               data-target="#pagesCollapseMyClass" aria-expanded="false" aria-controls="pagesCollapseMyClass">My Class
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
-                                 data-parent="#sidenavAccordionPages">
+
+                            <div class="collapse" id="pagesCollapseMyClass" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="{% url 'school:my_class' %}">My Class</a>
+                                    <a class="nav-link" href="{% url 'school:add_student' %}">Add student</a>
+                                </nav>
+                            </div>
+                            {% endif %}
+
+
+<!--                            <a class="nav-link collapsed" href="#" data-toggle="collapse"-->
+<!--                               data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">Error-->
+<!--                                <div class="sb-sidenav-collapse-arrow">-->
+<!--                                    <i class="fas fa-angle-down"></i>-->
+<!--                                </div>-->
+<!--                            </a>-->
+<!--                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"-->
+<!--                                 data-parent="#sidenavAccordionPages">-->
+<!--                                <nav class="sb-sidenav-menu-nested nav">-->
 <!--                                    <a class="nav-link" href="401.html">401 Page</a>-->
 <!--                                    <a class="nav-link" href="404.html">404 Page</a>-->
 <!--                                    <a class="nav-link" href="500.html">500 Page</a>-->
-                                </nav>
-                            </div>
+<!--                                </nav>-->
+<!--                            </div>-->
                         </nav>
                     </div>
                     <div class="sb-sidenav-menu-heading">Addons</div>
@@ -137,7 +147,9 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid">
-                <h1 class="mt-4">Dashboard</h1>
+                {% if section %}
+                <h1 class="mt-4">{{ section }}</h1>
+                {% endif %}
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item active">Dashboard</li>
                 </ol>

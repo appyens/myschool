@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.apps import apps
 
 from .forms import UserRegisterForm, UserLoginForm, EditProfileForm
 from .models import Profile
@@ -15,10 +16,30 @@ User = get_user_model()
 
 @login_required
 def dashboard(request):
-    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
+    """
+    A login redirect view
+    :param request:
+    :return:
+    """
+    total_staff = Profile.objects.count()
+    standard_model = apps.get_model('school', 'Standard')
+    total_standard = standard_model.objects.count()
+    student_model = apps.get_model('school.Student')
+    total_student = student_model.objects.count()
+    return render(request, 'account/dashboard.html', {
+        'section': 'Dashboard',
+        'total_staff': total_staff,
+        'total_standard': total_standard,
+        'total_student': total_student
+    })
 
 
 def staff_register(request):
+    """
+    Signs up to this site
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         user_form = UserRegisterForm(data=request.POST)
         if user_form.is_valid():
@@ -37,6 +58,11 @@ def staff_register(request):
 
 
 def staff_login(request):
+    """
+    User login view
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -55,23 +81,41 @@ def staff_login(request):
         return render(request, 'registration/login.html', {'form': form})
 
 
+@login_required
 def staff_logout(request):
+    """
+    Logs out user from session
+    :param request:
+    :return:
+    """
     logout(request)
     return render(request, 'registration/logout.html')
 
 
 @login_required
 def show_profile(request, username=None):
+    """
+    Show Profile model object for current user
+    :param request:
+    :param username:
+    :return:
+    """
     template = 'account/show_profile.html'
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
     can_edit = False
     if request.user.profile.role == 'headmaster' and username == request.user.username:
         can_edit = True
-    return render(request, template_name=template, context={'profile': profile, 'can_edit': can_edit})
+    return render(request, template_name=template, context={'profile': profile, 'can_edit': can_edit, 'section': 'Profile'})
 
 
+@login_required
 def edit_profile(request):
+    """
+    Allows editing of current user profile
+    :param request:
+    :return:
+    """
     template = 'account/edit_profile.html'
     if request.method == 'POST':
         form = EditProfileForm(instance=Profile.objects.get(user=request.user), data=request.POST)
@@ -80,12 +124,5 @@ def edit_profile(request):
             return redirect('account:show_profile')
     initial_data = Profile.objects.filter(user=request.user).values()[0]
     form = EditProfileForm(initial=initial_data)
-    return render(request, template_name=template, context={'form': form})
+    return render(request, template_name=template, context={'form': form, 'section': 'Edit profile'})
 
-
-@login_required
-@headmaster_required
-def staff_list(request):
-    template = 'account/staff-list.html'
-    total_staff = Profile.objects.filter(is_active=True)
-    return render(request, template_name=template, context={'staff': total_staff})

@@ -4,9 +4,6 @@
 
 {% block content %}
 
-<h1>Standards</h1>
-<h2>{{ breadcrumb }}</h2>
-
 <div class="card mb-4">
     <div class="card-header"><i class="fas fa-table mr-1"></i>DataTable Example</div>
     <div class="card-body">
@@ -14,42 +11,46 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr>
+                    <th>Sr/No</th>
                     <th>Student Name</th>
+                    <th>Student ID</th>
                     <th>GRN</th>
                     <th>UID</th>
                     <th>DOB</th>
                     <th>Gender</th>
                     <th>Religion</th>
+                    <th>Cast</th>
                     <th>Category</th>
-                    <th>Admission date</th>
-                    <th>Nationality</th>
                 </tr>
                 </thead>
+
                 <tfoot>
                 <tr>
+                    <th>Sr/No</th>
                     <th>Student Name</th>
+                    <th>Student ID</th>
                     <th>GRN</th>
                     <th>UID</th>
                     <th>DOB</th>
                     <th>Gender</th>
                     <th>Religion</th>
+                    <th>Cast</th>
                     <th>Category</th>
-                    <th>Admission date</th>
-                    <th>Nationality</th>
                 </tr>
                 </tfoot>
                 <tbody>
                 {% for person in students %}
                 <tr>
+                    <td>{{ forloop.counter }}</td>
                     <td><a href="#">{{ person.full_name }}</a></td>
+                    <td>{{ person.student_id }}</td>
                     <td>{{ person.grn }}</td>
                     <td>{{ person.uid }}</td>
                     <td>{{ person.dob }}</td>
                     <td>{{ person.gender }}</td>
                     <td>{{ person.religion.name }}</td>
+                    <td>{{ person.cast }}</td>
                     <td>{{ person.category.category }}</td>
-                    <td>{{ person.admission_date }}</td>
-                    <td>{{ person.nationality }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>

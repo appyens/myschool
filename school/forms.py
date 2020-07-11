@@ -1,17 +1,8 @@
 from django import forms
 
-from .models import Standard, Student, Cluster, School
+from .models import Standard, Student, School
 from account.models import Profile
 from django.contrib.auth.models import User
-from .models import Religion
-
-
-class ClusterForm(forms.ModelForm):
-
-    class Meta:
-        model = Cluster
-        fields = ('name',)
-        labels = {'name': 'Cluster name'}
 
 
 class SchoolForm(forms.ModelForm):
@@ -23,9 +14,10 @@ class SchoolForm(forms.ModelForm):
             'name': 'School Name',
         }
 
-
-class CountInputForm(forms.Form):
-    count = forms.IntegerField()
+    def __init__(self, *args, **kwargs):
+        super(SchoolForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
 
 
 class CreateStaffForm(forms.ModelForm):
@@ -55,12 +47,22 @@ class CreateStaffForm(forms.ModelForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
 
+    def __init__(self, *args, **kwargs):
+        super(CreateStaffForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
 
 class StandardForm(forms.ModelForm):
 
     class Meta:
         model = Standard
         fields = ('standard',)
+
+    def __init__(self, *args, **kwargs):
+        super(StandardForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
 
 
 class ClassTeacherForm(forms.Form):
@@ -73,6 +75,11 @@ class ClassTeacherForm(forms.Form):
         widget=forms.Select,
         choices=((i, i) for i in Standard.objects.all().values_list('standard', flat=True)))
 
+    def __init__(self, *args, **kwargs):
+        super(ClassTeacherForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
 
 class StudentForm(forms.ModelForm):
 
@@ -80,7 +87,25 @@ class StudentForm(forms.ModelForm):
         model = Student
         fields = '__all__'
 
-    def __init__(self, request, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['religion'].queryset = Religion.objects.filter(name__startswith='A')
-        self.fields['first_name'].initial = "khdsf"
+    def __init__(self, *args, **kwargs):
+        super(StudentForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+
+class UploadFileForm(forms.Form):
+
+    file = forms.FileField(help_text="Select CSV file only")
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        allowed_ext = ['csv', 'CSV']
+        file_name, extension = file.name.split('.')
+        if extension not in allowed_ext:
+            raise forms.ValidationError("Wrong file type, try again")
+        return file
+
+    def __init__(self, *args, **kwargs):
+        super(UploadFileForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control'})

@@ -1,39 +1,42 @@
 from django.shortcuts import render, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import ClusterForm, SchoolForm, StandardForm, ClassTeacherForm, StudentForm, CreateStaffForm
-from .models import Standard, School, Student
+from .forms import SchoolForm, ClassTeacherForm, StudentForm, CreateStaffForm, UploadFileForm
+from .models import Standard, Student
 from common.decorators import headmaster_required
 from account.models import Profile
 
 
 @headmaster_required
 def setup_school(request):
+    """
+    Allows setting up of school for the first time
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
-        cluster_form = ClusterForm(data=request.POST)
         school_form = SchoolForm(data=request.POST)
-        if cluster_form.is_valid() and school_form.is_valid():
-            cluster = cluster_form.save()
+        if school_form.is_valid():
             school = school_form.save(commit=False)
-            school.cluster = cluster
             school.save()
             for i in range(1, school.max_standards + 1):
                 Standard.objects.create(school=school, standard=i)
             messages.success(request, "")
-            cluster_form = ClusterForm()
             school_form = SchoolForm()
-            return render(request, 'school/setup-school.html', {'cluster_form': cluster_form, 'school_form': school_form})
+            return render(request, 'school/setup-school.html', {'school_form': school_form, 'section': 'School setup'})
         else:
-            cluster_form = ClusterForm(data=request.POST)
-            school_form = SchoolForm(data=request.POST)
-            return render(request, 'school/setup-school.html', {'cluster_form': cluster_form, 'school_form': school_form})
-    cluster_form = ClusterForm()
+            return render(request, 'school/setup-school.html', {'school_form': school_form, 'section': 'School setup'})
     school_form = SchoolForm()
-    return render(request, 'school/setup-school.html', {'cluster_form': cluster_form, 'school_form': school_form})
+    return render(request, 'school/setup-school.html', {'school_form': school_form, 'section': 'School setup'})
 
 
 @headmaster_required
 def create_staff(request):
+    """
+    Creates and mail newly created staff
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         user_form = CreateStaffForm(request.POST)
         if user_form.is_valid():
@@ -54,13 +57,20 @@ def create_staff(request):
             user.email_user(subject=subject, message=message)
             user.save()
             user_form = CreateStaffForm()
-            return render(request, 'school/create-staff.html', {'user_form': user_form})
+            return render(request, 'school/create-staff.html', {'user_form': user_form, 'section': 'Add staff'})
+        else:
+            return render(request, 'school/create-staff.html', {'user_form': user_form, 'section': 'Add staff'})
     user_form = CreateStaffForm()
-    return render(request, 'school/create-staff.html', {'user_form': user_form})
+    return render(request, 'school/create-staff.html', {'user_form': user_form, 'section': 'Add staff'})
 
 
 @headmaster_required
 def add_class_teacher(request):
+    """
+    Assigns class to the teacher
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         form = ClassTeacherForm(request.POST)
         if form.is_valid():
@@ -72,34 +82,82 @@ def add_class_teacher(request):
             profile.save()
             messages.success(request, "Class added successfully")
             form = ClassTeacherForm()
-            return render(request, 'school/add-class-teacher.html', {'form': form})
+            return render(request, 'school/add-class-teacher.html', {'form': form, 'section': 'Add class-teacher'})
     form = ClassTeacherForm()
-    return render(request, 'school/add-class-teacher.html', {'form': form})
+    return render(request, 'school/add-class-teacher.html', {'form': form, 'section': 'Add class-teacher'})
+
+
+@headmaster_required
+def staff_list(request):
+    """
+    All staff list
+    :param request:
+    :return:
+    """
+    template = 'account/staff-list.html'
+    total_staff = Profile.objects.filter(is_active=True)
+    return render(request, template_name=template, context={'staff': total_staff, 'section': 'All staff'})
 
 
 def standard_list(request):
+    """
+    All standard list
+    :param request:
+    :return:
+    """
     standards = Standard.objects.all()
-    return render(request, 'school/standard-list.html', {'standards': standards})
+    return render(request, 'school/standard-list.html', {'standards': standards, 'section': 'All classes'})
 
 
 def my_class(request):
+    """
+    If user has class associated with him/her, then it show class overview
+    :param request:
+    :return:
+    """
     profile = Profile.objects.get(user=request.user)
-    return render(request, 'school/my-class.html', {'profile': profile})
+    return render(request, 'school/my-class.html', {'profile': profile, 'section': 'My class'})
 
 
 def class_detail(request, std_number):
+    """
+    Display student list in the class
+    :param request:
+    :param std_number:
+    :return:
+    """
     std = Standard.objects.get(standard=std_number)
     students = Student.objects.filter(standard=std)
-    return render(request, 'school/class-detail.html', {'students': students})
+    return render(request, 'school/class-detail.html', {'students': students, 'section': 'My class'})
 
 
 def add_student(request):
+    """
+    Allows adding student individually with form or upload student list with csv file.
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
-        st = {'first_name': "VIlas", 'last_name': 'Nevkar'}
         form = StudentForm(request.POST)
-        if form.is_valid():
-            form.save()
+        file_form = UploadFileForm(request.POST, request.FILES)
+        if file_form.is_valid():
+            file = file_form.cleaned_data['file']
+            print(file.read())
+        elif form.is_valid():
+            student = form.save(commit=False)
+            student.save()
             messages.success(request, "Student added successfully")
-            return render(request, 'manage/add-student.html', {})
+            return render(request, 'school/add-student.html', {})
+        else:
+            return render(request, 'school/add-student.html', {'form': form, 'file_form': file_form, 'section': 'Add student'})
     form = StudentForm()
-    return render(request, 'manage/add-student.html', {'form': form})
+    file_form = UploadFileForm()
+    return render(request, 'school/add-student.html', {'form': form, 'file_form': file_form, 'section': 'Add student'})
+
+
+def student_detail(request):
+    pass
+
+
+def download_csv(request):
+    pass

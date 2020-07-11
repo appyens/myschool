@@ -3,15 +3,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 
-class Cluster(models.Model):
-    name = models.CharField(max_length=128)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
-
-
 class School(models.Model):
-    cluster = models.ForeignKey(Cluster, on_delete=models.DO_NOTHING)
+    cluster = models.CharField(max_length=128)
     name = models.CharField(max_length=512)
     place = models.CharField(max_length=256)
     academic_year = models.CharField(max_length=32)

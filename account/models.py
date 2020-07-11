@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
@@ -56,8 +58,14 @@ class Profile(models.Model):
         if self.role == 'non_teacher' and self.standard:
             raise ValidationError("Non teaching staff cannot have standard")
 
+    def has_standard(self):
+        if self.standard:
+            return True
+
     def get_age(self):
-        pass
+        today = datetime.today()
+        dob = self.dob
+        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
 
 # signal
