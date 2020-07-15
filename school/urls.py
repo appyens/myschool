@@ -12,4 +12,5 @@ urlpatterns = [
     path('standard/my-class/', views.my_class, name='my_class'),
     path('standard/<int:std_number>', views.class_detail, name='class_detail'),
     path('student/add/', views.add_student, name='add_student'),
+
 ]

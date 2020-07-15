@@ -50,7 +50,7 @@ def staff_register(request):
             # save the user object
             new_user.save()
             # create the user profile
-            # Profile.objects.create(user=new_user)
+            Profile.objects.create(user=new_user)
             return render(request, 'registration/registration_done.html', {'new_user': new_user})
     else:
         user_form = UserRegisterForm()

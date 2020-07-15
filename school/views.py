@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from django.shortcuts import render, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
+
 from .forms import SchoolForm, ClassTeacherForm, StudentForm, CreateStaffForm, UploadFileForm
-from .models import Standard, Student
+from .models import Standard, Student, Religion, CastCategory
 from common.decorators import headmaster_required
 from account.models import Profile
 
@@ -140,9 +143,35 @@ def add_student(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
         file_form = UploadFileForm(request.POST, request.FILES)
+
         if file_form.is_valid():
             file = file_form.cleaned_data['file']
-            print(file.read())
+            file_data = file.read().decode("utf-8")
+            lines = file_data.split("\n")
+            # FIXME: lopping for one extra time
+
+            for line in lines[1:]:
+                data = line.split(',')
+                date = list(map(int, data[8].split('/')))
+                std = Standard.objects.get(standard=data[1])
+                religion = Religion.objects.get(name=data[10])
+                category = CastCategory.objects.get(category=data[12].strip())
+                student = Student.objects.create(
+                    standard=std,
+                    grn=int(data[2]),
+                    student_id=data[3],
+                    uid=data[4],
+                    first_name=data[5],
+                    middle_name=data[6],
+                    last_name=data[7],
+                    dob=datetime(year=date[2], month=date[1], day=date[0]),
+                    gender=data[9],
+                    religion=religion,
+                    cast=data[11],
+                    category=category
+                )
+                student.save()
+
         elif form.is_valid():
             student = form.save(commit=False)
             student.save()
@@ -161,3 +190,4 @@ def student_detail(request):
 
 def download_csv(request):
     pass
+
