@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 
@@ -184,8 +184,9 @@ def add_student(request):
     return render(request, 'school/add-student.html', {'form': form, 'file_form': file_form, 'section': 'Add student'})
 
 
-def student_detail(request):
-    pass
+def student_detail(request, student_grn=None):
+    student = get_object_or_404(Student, grn=student_grn)
+    return render(request, 'school/student-detail.html', {'student': student})
 
 
 def download_csv(request):

@@ -1,0 +1,55 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-6">
+        <h2>{{ student.full_name }}</h2>
+        <h4>Personal details</h4>
+        <hr>
+        <p>Gender: {{ student.gender }}</p>
+        <p>Standard: {{ student.standard.standard }}</p>
+        <p>GRN: {{ student.gender }}</p>
+        <p>Student ID: {{ student.student_id }}</p>
+        <p>Date of birth: {{ student.dob }}</p>
+        <p>Adhaar: {{ student.uid }}</p>
+        <p>Cast: {{ student.cast }}</p>
+        <p>Religion: {{ student.religion }}</p>
+        <p>Category: {{ student.category }}</p>
+        <p>Language: {{ student.language }}</p>
+        <h3>Address</h3>
+        <hr>
+
+        <p>{% for add in student.address.all %}</p>
+
+            <h4>{{ add.type|title }} Address</h4>
+            <p>Line 1: {{ add.line1 }}</p>
+            <p>Line 2: {{ add.line2 }}</p>
+            <p>City: {{ add.city }}</p>
+            <p>Taluka: {{ add.taluka }}</p>
+            <p>Dist: {{ add.dist }}</p>
+            <p>PIN: {{ add.pin }}</p>
+
+        {% endfor %}
+
+        <h3>Academic details</h3>
+        <hr>
+        <p>Admission dat: {{ student.admission_date }}</p>
+        <p>Last School: {{ student.last_school }}</p>
+        <p>Mother Name: {{ student.mother_first_name }}</p>
+        <p>Father Middle Name: {{ student.father_middle_name }}</p>
+        <p>Nationality: {{ student.nationality }}</p>
+        <p>Mother tounge: {{ student.mother_tongue }}</p>
+    </div>
+    <div class="col-2">
+        {% if student.photo %}
+        <img src="{{ student.photo.url }}" alt="" height="200" width="auto">
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock content %}

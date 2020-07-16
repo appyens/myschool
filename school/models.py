@@ -128,8 +128,9 @@ class Student(models.Model):
         ('Female', 'Female')
     )
 
-    standard = models.ForeignKey(to=Standard, on_delete=models.DO_NOTHING)
+    standard = models.ForeignKey(to=Standard, on_delete=models.DO_NOTHING, related_name='students')
     grn = models.IntegerField(unique=True)
+    # unique = True, Integer
     student_id = models.CharField(max_length=19)
     uid = models.CharField(max_length=12, null=True, blank=True)
     first_name = models.CharField(max_length=256)
@@ -142,11 +143,13 @@ class Student(models.Model):
     category = models.ForeignKey(CastCategory, on_delete=models.DO_NOTHING)
     mother_tongue = models.ForeignKey(Language, on_delete=models.DO_NOTHING, blank=True, null=True)
     admission_date = models.DateField(blank=True, null=True)
+    address = models.ManyToManyField(Address, blank=True)
     mother_first_name = models.CharField(max_length=256, blank=True, null=True)
     father_middle_name = models.CharField(max_length=256, blank=True, null=True)
     nationality = models.CharField(max_length=256, default='Indian')
     photo = models.ImageField(upload_to='student/%Y/%m/%d/', null=True, blank=True)
     last_school = models.CharField(max_length=256, blank=True, null=True)
+    admitted_std = models.OneToOneField(Standard, on_delete=models.DO_NOTHING, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
@@ -160,7 +163,7 @@ class Student(models.Model):
         return full_name
 
     def get_absolute_url(self):
-        return reverse('students:student_detail', args=[self.grn])
+        return reverse('school:student_detail', args=[self.grn])
 
     @classmethod
     def total_students(cls):
