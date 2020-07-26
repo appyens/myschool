@@ -68,11 +68,11 @@ class Profile(models.Model):
         return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
 
-# signal
-def add_profile_signal(sender, instance, created, *args, **kwargs):
-    if created:
-        profile = Profile.objects.create(user=instance)
-        profile.save()
-
-
-post_save.connect(add_profile_signal, sender=User)
+# # signal
+# def add_profile_signal(sender, instance, created, *args, **kwargs):
+#     if created:
+#         profile = Profile.objects.create(user=instance)
+#         profile.save()
+#
+#
+# post_save.connect(add_profile_signal, sender=User)

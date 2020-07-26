@@ -8,6 +8,7 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title>{% block title %}Auth base{% endblock title %}</title>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js"
             crossorigin="anonymous"></script>
@@ -45,5 +46,10 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
 <script src="{% static 'js/scripts.js' %}"></script>
+<script>
+   function onSubmit(token) {
+     document.getElementById("demo-form").submit();
+   }
+ </script>
 </body>
 </html>

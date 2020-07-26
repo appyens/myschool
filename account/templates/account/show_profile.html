@@ -3,11 +3,13 @@
 {% block title %}Edit profile{% endblock title %}
 
 {% block content %}
-
+<p>{{ views }}</p>
+{% with can_edit=True %}
 {% if can_edit %}
 <h1>{{ profile.user.get_full_name }}</h1>
 <a class="btn btn-primary" href="{% url 'account:edit_profile' %}">Edit</a>
 {% endif %}
+{% endwith %}
 <hr>
 <div class="row">
     <div class="col-4">

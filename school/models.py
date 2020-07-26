@@ -124,8 +124,8 @@ class Address(models.Model):
 class Student(models.Model):
 
     GENDER_CHOICE = (
-        ('Male', 'Male'),
-        ('Female', 'Female')
+        ('male', 'Male'),
+        ('female', 'Female')
     )
 
     standard = models.ForeignKey(to=Standard, on_delete=models.DO_NOTHING, related_name='students')

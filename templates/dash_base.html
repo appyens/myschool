@@ -100,7 +100,7 @@
 
                             {% if request.user.profile.has_standard %}
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                               data-target="#pagesCollapseMyClass" aria-expanded="false" aria-controls="pagesCollapseMyClass">My Class
+                               data-target="#pagesCollapseMyClass" aria-expanded="false" aria-controls="pagesCollapseMyClass">Class
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
 
@@ -129,6 +129,21 @@
 <!--                            </div>-->
                         </nav>
                     </div>
+
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayoutsReports"
+                       aria-expanded="false" aria-controls="collapseLayoutsReports">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Reports
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+
+                    <div class="collapse" id="collapseLayoutsReports" aria-labelledby="headingOne"
+                         data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'reports:student_report' %}">Students</a>
+                        </nav>
+                    </div>
+
                     <div class="sb-sidenav-menu-heading">Addons</div>
                     <a class="nav-link" href="charts.html">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>

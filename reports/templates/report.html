@@ -1,0 +1,16 @@
+{% extends 'dash_base.html' %}
+
+{% block title %}Download report{% endblock title %}
+
+{% block content %}
+
+<h1>Reports</h1>
+
+<div>
+    <form action="{% url 'reports:student_report' %}" method="GET">
+        {{ form.as_p }}
+        <button class="btn btn-primary" type="submit">Download</button>
+    </form>
+</div>
+
+{% endblock content %}

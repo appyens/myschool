@@ -50,7 +50,7 @@ def staff_register(request):
             # save the user object
             new_user.save()
             # create the user profile
-            Profile.objects.create(user=new_user)
+            # Profile.objects.create(user=new_user)
             return render(request, 'registration/registration_done.html', {'new_user': new_user})
     else:
         user_form = UserRegisterForm()
@@ -100,13 +100,19 @@ def show_profile(request, username=None):
     :param username:
     :return:
     """
+
+    # Number of visits to this view, as counted in the session variable.
+    num_visits = request.session.get('num_visits', None)
+    if num_visits:
+        request.session['num_visits'] = num_visits + 1
+        print(request.session.get('num_visits'))
     template = 'account/show_profile.html'
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
     can_edit = False
     if request.user.profile.role == 'headmaster' and username == request.user.username:
         can_edit = True
-    return render(request, template_name=template, context={'profile': profile, 'can_edit': can_edit, 'section': 'Profile'})
+    return render(request, template_name=template, context={'profile': profile, 'can_edit': can_edit, 'section': 'Profile', 'views': num_visits})
 
 
 @login_required
@@ -124,5 +130,6 @@ def edit_profile(request):
             return redirect('account:show_profile')
     initial_data = Profile.objects.filter(user=request.user).values()[0]
     form = EditProfileForm(initial=initial_data)
-    return render(request, template_name=template, context={'form': form, 'section': 'Edit profile'})
+    name = request.session.get("name")
+    return render(request, template_name=template, context={'form': form, 'section': 'Edit profile', "name": name})
 

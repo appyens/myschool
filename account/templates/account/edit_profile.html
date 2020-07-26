@@ -5,6 +5,7 @@
 {% block content %}
 
 <h1>My Profile</h1>
+<h2>{{ name }}</h2>
 
 <div>
     <form action="{% url 'account:edit_profile' %}" method="POST">

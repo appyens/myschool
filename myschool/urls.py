@@ -25,7 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
     path('account/', include('account.urls', namespace='account')),
+    path('account/', include('django.contrib.auth.urls')),
     path('school/', include('school.urls', namespace='school')),
+    path('reports/', include('reports.urls', namespace='report')),
 ]
 
 if settings.DEBUG:

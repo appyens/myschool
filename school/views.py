@@ -3,6 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, reverse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from .forms import SchoolForm, ClassTeacherForm, StudentForm, CreateStaffForm, UploadFileForm
 from .models import Standard, Student, Religion, CastCategory
@@ -10,6 +11,7 @@ from common.decorators import headmaster_required
 from account.models import Profile
 
 
+@login_required
 @headmaster_required
 def setup_school(request):
     """

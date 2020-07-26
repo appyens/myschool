@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'school.apps.SchoolConfig',
+    'reports.apps.ReportsConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,11 @@ MEDIA_URL = '/media/'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'an.anuraag@gmail.com'
-EMAIL_HOST_PASSWORD = 'alxrlmsgkawngjrv'
+EMAIL_HOST_PASSWORD = 'pqvqspqrdvtndsev'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+RECAPTCHA_SITE_KEY = "6Ld4V7MZAAAAAGN066jKATlVGLjk2uK6IKL1UkOZ"
+RECAPTCHA_SECRET_KEY = "6Ld4V7MZAAAAAMPhmrvHvNZAlM8N0j4x0MR8XFOD"
+
+LOGIN_URL = 'account:login'
