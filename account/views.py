@@ -2,13 +2,11 @@ from django.shortcuts import render, reverse, redirect
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.apps import apps
 
 from .forms import UserRegisterForm, UserLoginForm, EditProfileForm
 from .models import Profile
-from common.decorators import headmaster_required
 
 
 User = get_user_model()
