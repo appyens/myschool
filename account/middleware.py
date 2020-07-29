@@ -9,7 +9,7 @@ class BreadcrumbMiddleware:
         return response
 
     def process_template_response(self, request, response):
-        breadcrumbs = request.get_full_path().split('/')
+        breadcrumbs = ['1', '2', '3']
         print(breadcrumbs)
         response.context_data['breadcrumb'] = breadcrumbs
         return response
@@ -44,3 +44,17 @@ class CoffeehouseMiddleware(object):
         # Logic executed after the view is called,
         # ONLY IF view response is TemplateResponse, see listing 2-24
         pass
+
+
+class MyTestMiddleware:
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request, *args, **kwargs):
+        # before
+        print("Before calling view")
+        response = self.get_response(request)
+        # after
+        print("after calling view")
+        return response

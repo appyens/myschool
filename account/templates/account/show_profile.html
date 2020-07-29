@@ -3,7 +3,6 @@
 {% block title %}Edit profile{% endblock title %}
 
 {% block content %}
-<p>{{ views }}</p>
 {% with can_edit=True %}
 {% if can_edit %}
 <h1>{{ profile.user.get_full_name }}</h1>

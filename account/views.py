@@ -99,18 +99,13 @@ def show_profile(request, username=None):
     :return:
     """
 
-    # Number of visits to this view, as counted in the session variable.
-    num_visits = request.session.get('num_visits', None)
-    if num_visits:
-        request.session['num_visits'] = num_visits + 1
-        print(request.session.get('num_visits'))
     template = 'account/show_profile.html'
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
     can_edit = False
     if request.user.profile.role == 'headmaster' and username == request.user.username:
         can_edit = True
-    return render(request, template_name=template, context={'profile': profile, 'can_edit': can_edit, 'section': 'Profile', 'views': num_visits})
+    return render(request, template_name=template, context={'profile': profile, 'can_edit': can_edit, 'section': 'Profile'})
 
 
 @login_required
